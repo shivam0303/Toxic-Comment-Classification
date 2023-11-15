@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <title>Toxic Comment Classification</title>
+</head>
+<body>
+  <!-- component -->
+<div class="h-auto pb-10 w-full bg-gray-900 text-white">
+  <header class="text-center mx-auto pt-10">
+    <a href="#" class="p-5 hover:bg-gray-800">
+      <span class="text-3xl font-semibold">Pattern Recognition and Machine Learning</span>
+    </a>
+  </header>
+
+  <div class="text-center px-6 py-5 mt-5">
+    <section>
+      <a class="text-sm font-bold hover:text-gray-400 cursor-pointer">Project Github</a>
+      <span> | </span>
+      <a class="text-sm font-bold hover:text-gray-400 cursor-pointer">Project Report</a>
+    </section>
+  </div>
+
+  <div class="text-center px-6 pb-5">
+    <section>
+      <h1 class="mt-5 text-6xl font-bold">Toxic Comments Classification</h1>
+      <p class="mt-10 text-gray-400 description">
+        Identification and Classification of Toxic Comment Using Machine Learning Methods
+      </p>
+    </section>
+  </div>
+  <header class="text-center mx-auto pt-10">
+    <a href="https://www.iitj.ac.in" target="blank" class="p-5 hover:bg-gray-800">
+      <span class="text-3xl font-semibold">Indian Institute of Technology Jodhpur (IITJ)</span>
+    </a>
+  </header>
+</div>
+<!-- component -->
+
+
+<div class="flex mb-10 my-auto">
+    <div class='mt-10 flex flex-col relative max-w-sm w-full rounded-lg overflow-hidden mx-auto' x-data="{maximum: ''}">
+        <h2 class="font-bold mb-1 text-gray-700 block text-center">Enter a Texual Comment for its Entire Toxicity Classification Report</h2>
+        <form action="" method="" enctype="multipart/form-data">
+          <textarea name="comment" rows="4" maxlength="210" x-model="maximum" x-ref="maximum"
+          class="block w-full mt-1 py-2 px-3 border-solid border-2 border-red-200 rounded-md shadow-sm focus:outline-none"></textarea>
+          <input type="button" value="Submit" id="submitComment" class="p-2 cursor-pointer bg-gray-800 text-white mt-2">
+        </form>
+        <span class="absolute px-2 py-1 text-xs text-white bg-blue-500 rounded right-2 bottom-2" x-text="$refs.maximum.getAttribute('maxlength') - maximum.length" x-cloak></span>
+    </div>
+    <span class="my-auto text-3xl font-extrabold">OR</span>
+    <div class='mt-10 flex flex-col relative max-w-sm w-full rounded-lg overflow-hidden mx-auto'>
+      <h2 class="font-bold mb-1 text-gray-700 block text-center">Enter a Twitter Handle</h2>
+      <form action="" method="" enctype="multipart/form-data">
+        <input name="userId" rows="4" maxlength="50" class="block w-full mt-1 py-2 px-3 border-solid border-2 border-red-200 rounded-md shadow-sm focus:outline-none"></input>
+        <input type="button" value="Submit" id="submitId" class="p-2 cursor-pointer bg-gray-800 text-white mt-2">
+      </form>
+  </div>
+
+</div>
+
+<!-- component -->
+<hr>
+<div id="result" class="my-10 text-center mx-auto text-lg"></div>
+  
+<div class="container mx-auto p-3 hidden" id="main_div">
+    <div class="w-full h-auto text-center py-10">
+      <div class="text-5xl text-center" id="checkToxic">
+
+      </div>
+    </div>
+    <hr>
+    <h2 class="p-10 text-3xl font-bold text-center">Statistics | Toxicity Report for the Given Comment | Predictions</h2>
+    
+    <div class="mt-4 mb-10 px-5 pt-4 pb-12 justify-between bg-white dark:bg-gray-600 shadow-sm rounded-lg">
+        <div class="justify-center">
+            <div class="text-base text-xl text-center py-4 clear-both">Overall Toxicity</div>
+            <div class="flex text-xs">
+            <div class="float-left bg-red-300 p-2" id="score_toxicity_t" style="min-width: 50px;">
+                50%
+            </div>
+            <div class="float-right bg-green-300 p-2" id="score_toxicity_tt" style="min-width: 50px;">
+                50%
+            </div>
+            </div>
+            <div class="text-base text-xl text-center py-4 clear-both">Severe Toxicity</div>
+            <div class="flex text-xs">
+            <div class="float-left bg-red-300 p-2" id="score_severe_t" style="min-width: 50px;">
+                50%
+            </div>
+            <div class="float-right w-1/5 bg-green-300 p-2" id="score_severe_tt" style="min-width: 50px;">
+                50%
+            </div>
+            </div>
+            <div class="text-base text-xl text-center py-4 clear-both">Obscene</div>
+            <div class="flex text-xs">
+            <div class="float-left bg-red-300 p-2" id="score_obscene_t" style="min-width: 50px;">
+                50%
+            </div>
+            <div class="float-right w-1/5 bg-green-300 p-2" id="score_obscene_tt" style="min-width: 50px;">
+                50%
+            </div>
+            </div>
+            <div class="text-base text-xl text-center py-4 clear-both">Insult</div>
+            <div class="flex text-xs">
+            <div class="float-left bg-red-300 p-2" id="score_insult_t" style="min-width: 50px;">
+                50%
+            </div>
+            <div class="float-right w-1/5 bg-green-300 p-2" id="score_insult_tt" style="min-width: 50px;">
+                50%
+            </div>
+            </div>
+            <div class="text-base text-xl text-center py-4 clear-both">Sexually Explicit</div>
+            <div class="flex text-xs">
+            <div class="float-left bg-red-300 p-2" id="score_sexual_t" style="min-width: 50px;">
+                50%
+            </div>
+            <div class="float-right w-1/5 bg-green-300 p-2" id="score_sexual_tt" style="min-width: 50px;">
+                50%
+            </div>
+            </div>
+            <div class="text-base text-xl text-center py-4 clear-both">Threat</div>
+            <div class="flex text-xs">
+            <div class="float-left bg-red-300 p-2" id="score_threat_t" style="min-width: 50px;">
+                50%
+            </div>
+            <div class="float-right w-1/5 bg-green-300 p-2" id="score_threat_tt" style="min-width: 50px;">
+                50%
+            </div>
+            </div>
+    </div>
+  </div>
+  <div class="overflow-x-auto mt-6">
+    <table class="table-auto border-collapse w-full">
+      <thead>
+        <tr class="rounded-lg text-sm font-medium text-gray-700" style="font-size: 0.9674rem">
+          <th class="px-4 py-2 bg-gray-200 text-left" style="background-color:#f8f8f8">Toxicity Classes</th>
+          <th class="px-4 py-2 text-right" style="background-color:#f8f8f8">Class Level (%)</th>
+        </tr>
+      </thead>
+      <tbody class="text-sm font-normal text-gray-700">
+        <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
+          <td class="px-4 py-4 text-left">Overall Toxicity Level</td>
+          <td class="px-4 py-4 text-right" id="score_toxicity">00.00</td>
+        </tr>
+        <tr class="hover:bg-gray-100 border-b border-gray-200 py-4">
+          <td class="px-4 py-4 text-left">Severe Toxicity Level</td>
+          <td class="px-4 py-4 text-right" id="score_severe">00.00</td>
+        </tr>
+        <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
+          <td class="px-4 py-4 text-left">Obscenity Level</td>
+          <td class="px-4 py-4 text-right" id="score_obscene">00.00</td>
+        </tr>
+        <tr class="hover:bg-gray-100 border-b border-gray-200 py-4">
+          <td class="px-4 py-4 text-left">Insulting Level</td>
+          <td class="px-4 py-4 text-right" id="score_insult">00.00</td>
+        </tr>
+        <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
+          <td class="px-4 py-4 text-left">Sexually Explicit Level</td>
+          <td class="px-4 py-4 text-right" id="score_sexual">00.00</td>
+        </tr>
+        <tr class="hover:bg-gray-100 border-b border-gray-200 py-4">
+          <td class="px-4 py-4 text-left">Threat Level</td>
+          <td class="px-4 py-4 text-right" id="score_threat">00.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="wordcloud" class="mx-auto text-center mb-10">
+    <h2 class="p-10 text-3xl font-bold text-center">Word Cloud</h2>
+    <img id="wordcloudimg" src="/static/wc.jpg" class="border border-1 w-1/2 mx-auto justify-center object-cover">
+  </div> 
+</div>
+
+</body>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type=text/javascript>
+    $(function() {
+      $('#submitComment').bind('click', function() {
+        $("#main_div").hide();
+        $('#result').show().text("Working...");
+        $.getJSON('/predict', {
+          comment: $('textarea[name="comment"]').val(),
+        }, function(data) {    
+          $('#score_toxicity').text((parseFloat(data.toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_severe').text((parseFloat(data.severe_toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_obscene').text((parseFloat(data.obscene)*100.0).toFixed(2).toString() + "%");
+          $('#score_insult').text((parseFloat(data.insult)*100.0).toFixed(2).toString() + "%");
+          $('#score_sexual').text((parseFloat(data.sexual_explicit)*100.0).toFixed(2).toString() + "%");
+          $('#score_threat').text((parseFloat(data.threat)*100.0).toFixed(2).toString() + "%");
+
+          $('#score_toxicity_t').text((parseFloat(data.toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_severe_t').text((parseFloat(data.severe_toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_obscene_t').text((parseFloat(data.obscene)*100.0).toFixed(2).toString() + "%");
+          $('#score_insult_t').text((parseFloat(data.insult)*100.0).toFixed(2).toString() + "%");
+          $('#score_sexual_t').text((parseFloat(data.sexual_explicit)*100.0).toFixed(2).toString() + "%");
+          $('#score_threat_t').text((parseFloat(data.threat)*100.0).toFixed(2).toString() + "%");
+          
+          $('#score_toxicity_tt').text((100 - parseFloat(data.toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_severe_tt').text((100 - parseFloat(data.severe_toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_obscene_tt').text((100 - parseFloat(data.obscene)*100.0).toFixed(2).toString() + "%");
+          $('#score_insult_tt').text((100 - parseFloat(data.insult)*100.0).toFixed(2).toString() + "%");
+          $('#score_sexual_tt').text((100 - parseFloat(data.sexual_explicit)*100.0).toFixed(2).toString() + "%");
+          $('#score_threat_tt').text((100 - parseFloat(data.threat)*100.0).toFixed(2).toString() + "%");
+          
+          document.getElementById("score_toxicity_t").style.width = (parseFloat(data.toxicity).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_severe_t").style.width = (parseFloat(data.severe_toxicity).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_obscene_t").style.width = (parseFloat(data.obscene).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_sexual_t").style.width = (parseFloat(data.sexual_explicit).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_insult_t").style.width = (parseFloat(data.insult).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_threat_t").style.width = (parseFloat(data.threat).toFixed(2)*100.0).toString() + "%";
+
+          document.getElementById("score_toxicity_tt").style.width = (100.0 - parseFloat(data.toxicity).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_severe_tt").style.width = (100.0 - parseFloat(data.severe_toxicity).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_obscene_tt").style.width = (100.0 - parseFloat(data.obscene).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_sexual_tt").style.width = (100.0 - parseFloat(data.sexual_explicit).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_insult_tt").style.width = (100.0 - parseFloat(data.insult).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_threat_tt").style.width = (100.0 - parseFloat(data.threat).toFixed(2)*100.0).toString() + "%";
+          
+          if((parseFloat(data.toxicity).toFixed(2)*100.0) > 50){
+            document.getElementById("checkToxic").style.color = "red";
+            $("#checkToxic").html('<span class="font-bold">The Comment is</span><span class="font-extrabold"> Toxic</span>');
+          }
+          else{
+            document.getElementById("checkToxic").style.color = "green";
+            $("#checkToxic").html('<span class="font-bold">The Comment is</span><span class="font-extrabold"> Not Toxic</span>');
+          }
+          
+          $('#result').text("Done!");
+          document.getElementById("result").style.display = "none";
+          var el = document.getElementById("wordcloudimg");     // Get the image element
+          var timestamp = new Date().getTime();
+          el.src = "/static/wc.jpg?t=" + timestamp; 
+          $("#main_div").show();
+        });
+        return false;
+      });
+    });
+
+    $(function() {
+      $('#submitId').bind('click', function() {
+        $("#main_div").hide();
+        //$("#main_div_1").hide();
+        
+        $('#result').text("Working...").show();
+        //alert($('input[name="userId"]').val());
+        $.getJSON('/predict', {
+          id: $('input[name="userId"]').val(),
+        }, function(data) {
+          $('#score_toxicity').text((parseFloat(data.toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_severe').text((parseFloat(data.severe_toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_obscene').text((parseFloat(data.obscene)*100.0).toFixed(2).toString() + "%");
+          $('#score_insult').text((parseFloat(data.insult)*100.0).toFixed(2).toString() + "%");
+          $('#score_sexual').text((parseFloat(data.sexual_explicit)*100.0).toFixed(2).toString() + "%");
+          $('#score_threat').text((parseFloat(data.threat)*100.0).toFixed(2).toString() + "%");
+
+          $('#score_toxicity_t').text((parseFloat(data.toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_severe_t').text((parseFloat(data.severe_toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_obscene_t').text((parseFloat(data.obscene)*100.0).toFixed(2).toString() + "%");
+          $('#score_insult_t').text((parseFloat(data.insult)*100.0).toFixed(2).toString() + "%");
+          $('#score_sexual_t').text((parseFloat(data.sexual_explicit)*100.0).toFixed(2).toString() + "%");
+          $('#score_threat_t').text((parseFloat(data.threat)*100.0).toFixed(2).toString() + "%");
+          
+          $('#score_toxicity_tt').text((100 - parseFloat(data.toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_severe_tt').text((100 - parseFloat(data.severe_toxicity)*100.0).toFixed(2).toString() + "%");
+          $('#score_obscene_tt').text((100 - parseFloat(data.obscene)*100.0).toFixed(2).toString() + "%");
+          $('#score_insult_tt').text((100 - parseFloat(data.insult)*100.0).toFixed(2).toString() + "%");
+          $('#score_sexual_tt').text((100 - parseFloat(data.sexual_explicit)*100.0).toFixed(2).toString() + "%");
+          $('#score_threat_tt').text((100 - parseFloat(data.threat)*100.0).toFixed(2).toString() + "%");
+          
+          $('#result').text("Done!");
+          document.getElementById("result").style.display = "none";
+
+          document.getElementById("score_toxicity_t").style.width = (parseFloat(data.toxicity).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_severe_t").style.width = (parseFloat(data.severe_toxicity).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_obscene_t").style.width = (parseFloat(data.obscene).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_sexual_t").style.width = (parseFloat(data.sexual_explicit).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_insult_t").style.width = (parseFloat(data.insult).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_threat_t").style.width = (parseFloat(data.threat).toFixed(2)*100.0).toString() + "%";
+
+          document.getElementById("score_toxicity_tt").style.width = (100.0 - parseFloat(data.toxicity).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_severe_tt").style.width = (100.0 - parseFloat(data.severe_toxicity).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_obscene_tt").style.width = (100.0 - parseFloat(data.obscene).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_sexual_tt").style.width = (100.0 - parseFloat(data.sexual_explicit).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_insult_tt").style.width = (100.0 - parseFloat(data.insult).toFixed(2)*100.0).toString() + "%";
+          document.getElementById("score_threat_tt").style.width = (100.0 - parseFloat(data.threat).toFixed(2)*100.0).toString() + "%";
+          
+          if((parseFloat(data.toxicity).toFixed(2)*100.0) > 50){
+            document.getElementById("checkToxic").style.color = "red";   
+            $("#checkToxic").html('<span class="font-bold">Given Twitter Handle is</span><span class="font-extrabold"> Toxic</span>');
+          }
+          else{
+            document.getElementById("checkToxic").style.color = "green";
+            $("#checkToxic").html('<span class="font-bold">Given Twitter Handle is</span><span class="font-extrabold"> Not Toxic</span>');
+          }
+
+          $('#result').text("Done!");
+          document.getElementById("result").style.display = "none";
+          var el = document.getElementById("wordcloudimg");     // Get the image element
+          var timestamp = new Date().getTime();
+          el.src = "/static/wc.jpg?t=" + timestamp; 
+          $("#main_div").show();
+        });
+        return false;
+      });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+<style>
+
+  thead tr th:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px;}
+  thead tr th:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px;}
+  
+  tbody tr td:first-child { border-top-left-radius: 5px; border-bottom-left-radius: 0px;}
+  tbody tr td:last-child { border-top-right-radius: 5px; border-bottom-right-radius: 0px;}
+  [x-cloak] {
+        visibility: hidden;
+        overflow: hidden;
+        display: none;
+  }
+</style>
+</html>
